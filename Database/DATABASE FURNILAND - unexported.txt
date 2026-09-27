@@ -1,0 +1,89 @@
+﻿-- CREDENTIALS ADMIN
+-- username: admin@gmail.com
+-- password: admin123
+
+
+CREATE DATABASE furniland;
+USE furniland;
+
+
+CREATE TABLE users (
+    userID INT(10) AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(20) NOT NULL UNIQUE,
+    email VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    gender VARCHAR(6) NOT NULL,
+    dob DATE NOT NULL,
+    role VARCHAR(6) NOT NULL
+);
+
+
+CREATE TABLE vendors (
+    vendorID INT(10) AUTO_INCREMENT PRIMARY KEY,
+    vendorName VARCHAR(20),
+    location VARCHAR(100)
+);
+
+
+CREATE TABLE products (
+    productID INT(10) AUTO_INCREMENT PRIMARY KEY,
+    productName VARCHAR(30),
+    description VARCHAR(255),
+    price FLOAT(10),
+    image VARCHAR(100),
+    vendorID INT(10) NOT NULL,
+    FOREIGN KEY (vendorID) REFERENCES vendors(vendorID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE cart (
+    cartID INT(10) AUTO_INCREMENT PRIMARY KEY,
+    userID INT(10) NOT NULL,
+    productID INT(10) NOT NULL,
+    quantity INT(5),
+    FOREIGN KEY (userID) REFERENCES users(userID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (productID) REFERENCES products(productID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE transactions (
+    transactionID INT(10) AUTO_INCREMENT PRIMARY KEY,
+    userID INT(10) NOT NULL,
+    totalPrice FLOAT(10),
+    transactionDate DATE,
+    FOREIGN KEY (userID) REFERENCES users(userID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE transaction_details (
+    detailID INT(10) AUTO_INCREMENT PRIMARY KEY,
+    transactionID INT(10) NOT NULL,
+    productID INT(10) NOT NULL,
+    quantity INT(5),
+    subtotal INT(10),
+    FOREIGN KEY (transactionID) REFERENCES transactions(transactionID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (productID) REFERENCES products(productID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+INSERT INTO vendors (vendorName, location) VALUES
+('Nordico', 'Jakarta Selatan'),
+('IKEA', 'Jakarta Pusat'),
+('Informa', 'Bekasi'),
+('Atria', 'Tangerang');
+
+
+INSERT INTO products (productName, description, price, image, vendorID) VALUES
+('Felix Accent Armchair', 'Mid-century armchair with soft velvet fabric and wooden legs', 1950000, 'felix-chair.jpg', 1),
+('Kyra Dining Set (4 Chairs)', 'Simple wood table with cushioned chairs, perfect for small spaces', 3790000, 'kyra-dining.jpg', 2),
+('Zeno Floating Wall Shelf', 'Wall-mounted shelf made of wood with modern design', 489000, 'zeno-shelf.jpg', 3),
+('Chao Study Table + Drawer', 'Sleek desk with tapered legs 100 drawer unit and minimalist style', 1675000, 'chao-desk.jpg', 1),
+('Verra Minimalist Coffee Table', 'Square table with tempered glass top and metal frame', 1150000, 'verra-table.jpg', 4),
+('Nova Mirror Cabinet', 'Multipurpose cabinet with soft-close mirror doors', 1780000, 'nova-cabin.jpg', 2),
+('Velvet L-Shape Sofa', 'Premium grey velvet sofa with extra cushioning and modern wooden legs', 5499000, 'sofa.png', 1),
+('Crystal Palace Chandelier', 'Elegant gold-plated chandelier with hanging crystals for a luxury ambiance', 2850000, 'chandelier.jpg', 4);
+
+
+INSERT INTO users (username, email, password, gender, dob, role) VALUES
+('LS015', 'admin@gmail.com', '$2y$10$rEcLbYGaqZjdDYggVzxj2OaNtHKyu1eD4mOAPA1fUw/as5nc13ZSi', 'male', '1990-01-01', 'admin'),
+('shan', 'shan@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'female', '1995-05-15', 'member');
